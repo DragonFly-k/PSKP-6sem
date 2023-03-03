@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style type="text/css">
+        * {
+            color: black;
+            text-align: center;
+            font-size: 14pt;
+            margin-top: 5px;
+        }
+
+        button {
+            background-color: lavender;
+            padding: 8px 15px;
+            font-size: 14pt;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div> 
+        <label for="teacher_post">teacher</label>
+        <input type="text" id="teacher_post" style="margin-right: -50px; height: 30px; width: 240px" />
+    </div>
+    <div> 
+        <label for="teacher_name_post">teacher_name</label>
+        <input type="text" id="teacher_name_post" style="margin-right: 0px; height: 30px; width: 240px" />
+    </div>
+    <div> 
+        <label for="pulpit_post">pulpit</label>
+        <input type="text" id="pulpit_post" style="margin-right: -58px; height: 30px; width: 240px" />
+    </div>
+<button onclick="postTeacher()">POST</button>
+<button onclick="putTeacher()">PUT</button>
+<button onclick="deleteTeacher()">DELETE</button>
+<button onclick="getTeachers()">GET</button>
+<div id="result" style="font-size: 14pt; margin-top: 5px;"></div>
+<br/><br/>
+<script>
+    function getTeachers() {
+        fetch('http://localhost:3000/api/teachers', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        })     
+        .then(response => {return response.json();})
+        .then(teacher => {
+            result.setAttribute('style', 'color: black')
+            result.innerHTML = '';
+            teacher.forEach(teacher => {
+                result.innerHTML +=  teacher.teacher +' | '+ teacher.teacher_name  +' | '+ teacher.pulpit + '<br>';
+            })
+        })
+    }
+    function postTeacher() {
+        result.innerHTML = '';
+        let teacher_post = document.getElementById("teacher_post").value;
+        let teacher_name_post = document.getElementById("teacher_name_post").value;
+        let pulpit_post = document.getElementById("pulpit_post").value;
+        if(teacher_post && teacher_name_post && pulpit_post) {
+            fetch('http://localhost:3000/api/teachers', {
+                method: 'POST',
+                body: JSON.stringify({teacher: teacher_post, teacher_name: teacher_name_post, pulpit: pulpit_post}),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then((res) => {
+                if (res.ok == false) {
+                        throw res.json()}
+                return res.json()})
+            .then((data) => {
+                result.setAttribute('style', 'color: black')
+                result.innerHTML = JSON.stringify(data)
+            })
+            .catch((error) => {
+                result.setAttribute('style', 'color: red')
+                error.then((a) => {result.innerHTML = JSON.stringify(a)})
+            })
+        }
+        else {
+            result.innerText+='Заполнены не все поля!';
+        }
+    }
+    function putTeacher() {
+        result.innerText = '';
+        let teacher_post = document.getElementById("teacher_post").value;
+        let teacher_name_post = document.getElementById("teacher_name_post").value;
+        if(teacher_post && teacher_name_post) {
+            fetch('http://localhost:3000/api/teachers', {
+                method: 'PUT',
+                body: JSON.stringify({teacher: teacher_post, teacher_name: teacher_name_post}),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then((res) => {
+                if (res.ok == false) {
+                        throw res.json()}
+                return res.json()})
+            .then((data) => {
+                result.setAttribute('style', 'color: black')
+                result.innerHTML = JSON.stringify(data)
+            })
+            .catch((error) => {
+                result.setAttribute('style', 'color: red')
+                error.then((a) => {result.innerHTML = JSON.stringify(a)})
+            })
+        }
+        else {
+            result.innerText+='Заполнены не все поля!';
+        }
+    }
+    function deleteTeacher() {
+        result.innerText = '';
+        let teacher_post = document.getElementById("teacher_post").value;
+        if(teacher_post) {
+            fetch(`http://localhost:3000/api/teachers/${teacher_post}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then((res) => {
+                if (res.ok == false) {
+                        throw res.json()}
+                return res.json()})
+            .then((data) => {
+                result.setAttribute('style', 'color: black')
+                result.innerHTML = JSON.stringify(data)
+            })
+            .catch((error) => {
+                result.setAttribute('style', 'color: red')
+                error.then((a) => {result.innerHTML = JSON.stringify(a)})
+            })
+        }
+        else {
+            result.innerText+='Заполните поле teacher';
+        }
+    }
+</script>
+</body>
+</html>
