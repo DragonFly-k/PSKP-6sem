@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Software</title>
+    <meta charset="utf-8" />
+    <style type="text/css">
+        table {
+            border: 1px solid black;
+            border-collapse: collapse; 
+        }
+
+        td {
+            border: 1px solid black;
+        }
+
+        th {
+            border: 1px solid black;           
+        }
+    </style>
+</head>
+<body>
+    <div id="error"></div>
+    <div class="forms">
+        <form action="/software/add" method="post">
+            <fieldset>
+                <legend>Add Software</legend>
+            <label>Name:                
+                <input name="Name">
+            </label>
+            <label>Version:                
+                <input name="Version">
+            </label>
+            <label>Manufacturer:                
+                <input name="Manufacturer">
+            </label>
+            <label>
+                <input type="submit" value="Add">
+            </label>
+            </fieldset>
+        </form>
+
+        <form action="/software/upd" id="formm">
+            <fieldset>
+            <legend>Update Version</legend>
+            <label>ID:
+                <input id = "id" name="ID" type="number">
+            </label>
+            <label>New Version:
+                <input id = "price" name="Version">
+            </label>
+            <label>
+                <button  value="Update" onclick="PutMethod(event)" >Update</button>
+            </label>
+            </fieldset>
+        </form>
+
+        <form action="/software/del" id="formm">
+            <fieldset>
+                <legend>Delete Software</legend>
+            <label>ID:
+                <input id = "id1" name="ID" type="number">
+            </label>
+            <label>
+                <button value="Delete" onclick="DelMethod(event)" >Delete</button>
+            </label>
+            </fieldset>
+        </form>
+    </div> 
+
+<table>
+    <tr><th>ID</th><th>Name</th><th>Version</th><th>Manufacturer</th></tr>
+{{#each software}}
+    <tr><td>{{ID}}</td><td>{{Name}}</td><td>{{Version}}</td><td>{{Manufacturer}}</td></tr>
+{{/each}}
+    <tr><td>{{us.ID}}</td><td>{{us.Name}}</td><td>{{us.Version}}</td><td>{{us.Manufacturer}}</td></tr>
+</table>
+<script defer="true">
+    document.addEventListener("DOMContentLoaded",()=>{
+        const applicantForm = document.getElementById('formm')
+        applicantForm.addEventListener('submit', (e) => PutMethod(e))
+        applicantForm.addEventListener('submit', (e) => DelMethod(e))
+    })
+    async function PutMethod(e) {
+        e.preventDefault();
+        console.log(e);
+
+        let ID= document.getElementById("id").value;
+        let Price = document.getElementById("price").value;
+
+        const options = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'   
+            },
+            body :  JSON.stringify({ID: ID, Version: Price})
+        };
+    try{
+        const response = await fetch('http://localhost:3000/software/upd',options);
+        if(response.status === 400) {
+                const error = document.getElementById("error");
+                error.innerHTML = response.statusText
+            }else{ 
+            window.location.reload()}
+        }catch(err){response.render('partial/error.hbs', { message: response.statusText })}  
+    }
+    async function DelMethod(e) {
+        e.preventDefault();
+        console.log(e);
+
+        let ID= document.getElementById("id1").value;
+
+        const options = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'   
+            },
+            body : JSON.stringify({ID: ID})
+        };
+    try{
+        const response = await fetch('http://localhost:3000/software/del',options);
+        if(response.status === 400) {
+                const error = document.getElementById("error");
+                error.innerHTML = response.statusText
+            }else{ 
+            window.location.reload()}
+        }catch(err){response.render('partial/error.hbs', { message: response.statusText })}  
+    }
+</script>
+</body>
+<html>

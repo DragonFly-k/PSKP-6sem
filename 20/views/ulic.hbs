@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Software</title>
+    <meta charset="utf-8" />
+    <style type="text/css">
+        table {
+            border: 1px solid black;
+            border-collapse: collapse; 
+        }
+
+        td {
+            border: 1px solid black;
+        }
+
+        th {
+            border: 1px solid black;           
+        }
+    </style>
+</head>
+<body>
+    <div id="error"></div>
+    <div class="forms">
+        <form action="/ulic/add" method="post">
+            <fieldset>
+                <legend>Add UserLicense</legend>
+            <label>UserID:                
+                <input name="UserID" type ="number">
+            </label>
+            <label>LicenseID:                
+                <input name="LicenseID" type ="number">
+            </label>
+            <label>LicenseKey:                
+                <input name="LicenseKey" >
+            </label>
+            <label>StartDate:                
+                <input name="StartDate" type ="date">
+            </label>            
+            <label>EndDate:                
+                <input name="EndDate" type ="date">
+            </label>
+            <label>
+                <input type="submit" value="Add">
+            </label>
+            </fieldset>
+        </form>
+
+        <form action="/ulic/upd" id="formm">
+            <fieldset>
+            <legend>Update EndDate</legend>
+            <label>ID:
+                <input id = "id" name="ID" type="number">
+            </label>
+            <label>EndDate:                
+                <input id = "price" name="EndDate" type ="date">
+            </label>
+            <label>
+                <button  value="Update" onclick="PutMethod(event)" >Update</button>
+            </label>
+            </fieldset>
+        </form>
+
+        <form action="/ulic/del" id="formm">
+            <fieldset>
+                <legend>Delete UserLicense</legend>
+            <label>ID:
+                <input id = "id1" name="ID" type="number">
+            </label>
+            <label>
+                <button value="Delete" onclick="DelMethod(event)" >Delete</button>
+            </label>
+            </fieldset>
+        </form>
+    </div> 
+</br></br>
+<table> 
+    <tr><th>ID</th><th>UserID</th><th>LicenseID</th><th>LicenseKey</th><th>StartDate</th><th>EndDate</th></tr>
+{{#each ulic}}
+    <tr><td>{{ID}}</td><td>{{UserID}}</td><td>{{LicenseID}}</td><td>{{LicenseKey}}</td><td>{{StartDate}}</td><td>{{EndDate}}</td></tr>
+{{/each}}
+    <tr><td>{{us.ID}}</td><td>{{us.UserID}}</td><td>{{us.LicenseID}}</td><td>{{us.LicenseKey}}</td><td>{{us.StartDate}}</td><td>{{us.EndDate}}</td></tr>
+</table>
+<script defer="true">
+    document.addEventListener("DOMContentLoaded",()=>{
+        const applicantForm = document.getElementById('formm')
+        applicantForm.addEventListener('submit', (e) => PutMethod(e))
+        applicantForm.addEventListener('submit', (e) => DelMethod(e))
+    })
+    async function PutMethod(e) {
+        e.preventDefault();
+        console.log(e);
+
+        let ID= document.getElementById("id").value;
+        let Price = document.getElementById("price").value;
+
+        const options = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'   
+            },
+            body :  JSON.stringify({ID: ID, EndDate: Price})
+        };
+    try{
+        const response = await fetch('http://localhost:3000/ulic/upd', options);
+        if(response.status === 400) {
+                const error = document.getElementById("error");
+                error.innerHTML = response.statusText
+            }else{ 
+            window.location.reload()}
+        }catch(err){response.render('partial/error.hbs', { message: response.statusText })}  
+    }
+
+    async function DelMethod(e) {
+        e.preventDefault();
+        console.log(e);
+        let ID= document.getElementById("id1").value;
+        const options = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'   
+            },
+            body : JSON.stringify({ID: ID})
+        };
+    try{
+        const response = await fetch('http://localhost:3000/ulic/del', options);
+        if(response.status === 400) {
+                const error = document.getElementById("error");
+                error.innerHTML = response.statusText
+            }else{ 
+            window.location.reload()}
+        }catch(err){response.render('partial/error.hbs', { message: response.statusText })}  
+    }
+</script>
+</body>
+<html>

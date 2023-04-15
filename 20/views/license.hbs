@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>License</title>
+    <meta charset="utf-8" />
+    <style type="text/css">
+        table {
+            border: 1px solid black;
+            border-collapse: collapse; 
+        }
+
+        td {
+            border: 1px solid black;
+        }
+
+        th {
+            border: 1px solid black;           
+        }
+    </style>
+    
+</head>
+<body>
+    <div id="error"></div>
+    <div class="forms">
+        <form action="/license/add" method="post">
+            <fieldset>
+                <legend>Add License</legend>
+            <label>SoftwareID:                
+                <input name="SoftwareID" type="number">
+            </label>
+            <label>Price:                
+                <input name="Price" type="number">
+            </label>
+            <label>
+                <input type="submit" value="Add">
+            </label>
+            </fieldset>
+        </form>
+
+        <form id="formm" action="/license/upd">
+            <fieldset>
+            <legend>Update Price</legend>
+            <label>ID:
+                <input id = "id" name="ID" type="number">
+            </label>
+            <label>New Price:
+                <input id ="price" name="Price" type="number" >
+            </label>
+            <label>
+                <button  value="Update" onclick="PutMethod(event)" >Update</button>
+            </label>
+            </fieldset>
+        </form>
+
+        <form action="/license/del" id="formm">
+            <fieldset>
+                <legend>Delete License</legend>
+            <label>ID:
+                <input id = "id1" name="ID" type="number">
+            </label>
+            <label>
+                <button value="Delete" onclick="DelMethod(event)" >Delete</button>
+            </label>
+            </fieldset>
+        </form>
+    </div> 
+
+<table>
+    <tr><th>ID</th><th>SoftwareID</th><th>Price</th></tr>
+{{#each license}}
+    <tr><td>{{ID}}</td><td>{{SoftwareID}}</td><td>{{Price}}</td></tr>
+{{/each}}
+    <tr><td>{{us.ID}}</td><td>{{us.SoftwareID}}</td><td>{{us.Price}}</td></tr>
+</table>
+<script defer="true">
+    document.addEventListener("DOMContentLoaded",()=>{
+        const applicantForm = document.getElementById('formm')
+        applicantForm.addEventListener('submit', (e) => PutMethod(e))
+        applicantForm.addEventListener('submit', (e) => DelMethod(e))
+    })
+    async function PutMethod(e) {
+        e.preventDefault();
+        console.log(e);
+
+        let ID= document.getElementById("id").value;
+        let Price = document.getElementById("price").value;
+
+        const options = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'   
+            },
+            body :  JSON.stringify({ID: ID, Price: Price})
+        };
+        try{
+            const response = await fetch('http://localhost:3000/license/upd',options);
+            if(response.status === 400) {
+                const error = document.getElementById("error");
+                error.innerHTML = response.statusText
+            }else{ 
+            window.location.reload()}
+        }catch(err){response.render('partial/error.hbs', { message: response.statusText })}  
+    }
+    async function DelMethod(e) {
+        e.preventDefault();
+        console.log(e);
+
+        let ID= document.getElementById("id1").value;
+
+        const options = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'   
+            },
+            body : JSON.stringify({ID: ID})
+        };
+        try{
+            const response = await fetch('http://localhost:3000/license/del',options);
+            if(response.status === 400) {
+                const error = document.getElementById("error");
+                error.innerHTML = response.statusText
+            }else{ 
+            window.location.reload()}
+        }catch(err){response.render('partial/error.hbs', { message: response.statusText })}  
+    }
+</script>
+</head>
+</body>
+<html>

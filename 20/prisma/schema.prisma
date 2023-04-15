@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Licenses {
+  ID           Int            @id(map: "PK__Licenses__3214EC27215D1B21") @default(autoincrement())
+  SoftwareID   Int
+  Price        Int
+  Software     Software       @relation(fields: [SoftwareID], references: [ID], onUpdate: NoAction, map: "FK__Licenses__Softwa__3A81B327")
+  UserLicenses UserLicenses[]
+}
+
+model Software {
+  ID           Int        @id(map: "PK__Software__3214EC277C6B3D93") @default(autoincrement())
+  Name         String     @db.VarChar(50)
+  Version      String     @db.VarChar(20)
+  Manufacturer String     @db.VarChar(50)
+  Licenses     Licenses[]
+}
+
+model UserLicenses {
+  ID         Int      @id(map: "PK__UserLice__3214EC27176645F4") @default(autoincrement())
+  UserID     Int
+  LicenseID  Int
+  LicenseKey String   @db.VarChar(50)
+  StartDate  DateTime @db.Date
+  EndDate    DateTime @db.Date
+  Licenses   Licenses @relation(fields: [LicenseID], references: [ID], onUpdate: NoAction, map: "FK__UserLicen__Licen__3E52440B")
+  Userr      Userr    @relation(fields: [UserID], references: [ID], onUpdate: NoAction, map: "FK__UserLicen__UserI__3D5E1FD2")
+}
+
+model Userr {
+  ID           Int            @id(map: "PK__Userr__3214EC274EB4C549") @default(autoincrement())
+  Name         String         @db.VarChar(50)
+  Email        String         @db.VarChar(100)
+  UserLicenses UserLicenses[]
+}

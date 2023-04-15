@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User</title>
+    <meta charset="utf-8" />
+    <style type="text/css">
+        table {
+            border: 1px solid black;
+            border-collapse: collapse; 
+        }
+
+        td {
+            border: 1px solid black;
+        }
+
+        th {
+            border: 1px solid black;           
+        }
+    </style>
+</head>
+<body>
+    <div id="error"></div>
+    <div class="forms">
+        <form action="/user/add" method="post">
+            <fieldset>
+                <legend>Add User</legend>
+            <label>Name:                
+                <input name="Name">
+            </label>
+            <label>Email:                
+                <input name="Email">
+            </label>
+            <label>
+                <input type="submit" value="Add">
+            </label>
+            </fieldset>
+        </form>
+
+        <form action="/user/upd" id="formm">
+            <fieldset>
+            <legend>Update Email</legend>
+            <label>ID:
+                <input id = "id" name="ID" type="number">
+            </label>
+            <label>New Email:
+                <input name="Email" id = "price">
+            </label>
+            <label>
+                <button  value="Update" onclick="PutMethod(event)" >Update</button>
+            </label>
+            </fieldset>
+        </form>
+
+        <form action="/user/del" id="formm" onsubmit="DelMethod(event)">
+            <fieldset>
+                <legend>Delete User</legend>
+            <label>ID:
+                <input id = "id1" name="ID" type="number">
+            </label>
+            <label>
+                <input type="submit" value="Delete" ></input>
+            </label>
+            </fieldset>
+        </form>
+    </div> 
+
+<table>
+    <tr><th>ID</th><th>Name</th><th>Email</th></tr>
+{{#each user}}
+    <tr><td>{{ID}}</td><td>{{Name}}</td><td>{{Email}}</td></tr>
+{{/each}}
+    <tr><td>{{us.ID}}</td><td>{{us.Name}}</td><td>{{us.Email}}</td></tr>
+</table>
+
+<script defer="true">
+    document.addEventListener("DOMContentLoaded",()=>{
+        const applicantForm = document.getElementById('formm')
+        applicantForm.addEventListener('submit', (e) => PutMethod(e))
+        applicantForm.addEventListener('submit', (e) => DelMethod(e))
+    })
+    async function PutMethod(e) {
+        e.preventDefault();
+        console.log(e);
+
+        let ID= document.getElementById("id").value;
+        let Price = document.getElementById("price").value;
+
+        const options = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'   
+            },
+            body :  JSON.stringify({ID: ID, Email: Price})
+        };
+    try{
+        const response = await fetch('http://localhost:3000/user/upd',options);
+        if(response.status === 400) {
+                const error = document.getElementById("error");
+                error.innerHTML = response.statusText
+            }else{ 
+            window.location.reload()}
+        }catch(err){response.render('partial/error.hbs', { message: response.statusText })}  
+    }
+    async function DelMethod(e) {
+        e.preventDefault();
+        console.log(e);
+
+        let ID= document.getElementById("id1").value;
+
+        const options = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'   
+            },
+            body : JSON.stringify({ID: ID})
+        };
+    try{
+        const response = await fetch('http://localhost:3000/user/del',options);
+        if(response.status === 400) {
+                const error = document.getElementById("error");
+                error.innerHTML = response.statusText
+            }else{ 
+            window.location.reload()}
+        }catch(err){response.render('partial/error.hbs', { message: response.statusText })}  
+    }
+</script>
+</body>
+<html>

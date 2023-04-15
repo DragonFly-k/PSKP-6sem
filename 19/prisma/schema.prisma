@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Auditorium {
+  auditorium          String          @id(map: "PK__Auditori__9ADEC563BFD49459") @db.NVarChar(255)
+  auditorium_name     String          @db.NVarChar(255)
+  auditorium_capacity Int
+  auditorium_type     String          @db.NVarChar(255)
+  Auditorium_type     Auditorium_type @relation(fields: [auditorium_type], references: [auditorium_type], onUpdate: NoAction, map: "FK__Auditoriu__audit__5629CD9C")
+}
+
+model Auditorium_type {
+  auditorium_type     String       @id(map: "PK__Auditori__824BA0540FEEA43F") @db.NVarChar(255)
+  auditorium_typename String       @db.NVarChar(255)
+  Auditorium          Auditorium[]
+}
+
+model Faculty {
+  faculty      String   @id(map: "PK__Faculty__2D4AEC39258BA998") @db.NVarChar(255)
+  faculty_name String   @db.NVarChar(255)
+  Pulpit       Pulpit[]
+}
+
+model Pulpit {
+  pulpit      String    @id(map: "PK__Pulpit__EC6DB4A576FB7C20") @db.NVarChar(255)
+  pulpit_name String    @db.NVarChar(255)
+  faculty     String    @db.NVarChar(255)
+  Faculty     Faculty   @relation(fields: [faculty], references: [faculty], onUpdate: NoAction, map: "FK__Pulpit__faculty__4BAC3F29")
+  Subject     Subject[]
+  Teacher     Teacher[]
+}
+
+model Subject {
+  subject      String @id(map: "PK__Subject__CED0396789BFE4A8") @db.NVarChar(255)
+  subject_name String @db.NVarChar(255)
+  pulpit       String @db.NVarChar(255)
+  Pulpit       Pulpit @relation(fields: [pulpit], references: [pulpit], onUpdate: NoAction, map: "FK__Subject__pulpit__5165187F")
+}
+
+model Teacher {
+  teacher      String @id(map: "PK__Teacher__933F87C4DB08C4C2") @db.NVarChar(255)
+  teacher_name String @db.NVarChar(255)
+  pulpit       String @db.NVarChar(255)
+  Pulpit       Pulpit @relation(fields: [pulpit], references: [pulpit], onUpdate: NoAction, map: "FK__Teacher__pulpit__4E88ABD4")
+}

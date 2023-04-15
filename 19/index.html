@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style type="text/css">
+        * {
+            color: black;
+            text-align: left;
+            font-size: 14pt;
+            margin-top: 5px;
+        }
+
+        button {
+            background-color: lavender;
+            padding: 8px 15px;
+            font-size: 14pt;
+            border-radius: 5px;
+        }
+
+        table {
+            border: 1px solid black;
+            border-collapse: collapse; 
+            font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+            background: rgb(231, 231, 254);
+        }
+
+        td {
+            border: 1px solid black;
+        }
+
+        th {
+            border: 1px solid black;
+            background: rgb(185, 185, 233);            
+        }
+    </style>
+</head>
+<body>
+    <table id="pulpitDiv"></table>
+    <div id="buttonDiv"></div>
+    <script>
+        async function btnOnClick () {
+            let pulpits = await fetch('/api/pulpits?page=' + this.innerHTML)
+            pulpits = await pulpits.json()
+            let pulpitDiv = document.getElementById('pulpitDiv')
+            pulpitDiv.innerHTML = '<tr><th>Кафедра</th><th>Название кафедры</th><th>Факультет</th><th>Количество преподавателей</th></tr>'
+            pulpits.forEach(pulpit => {
+                let tr = document.createElement('tr')
+                tr.innerHTML = '<td>' + pulpit.pulpit + '</td><td>' + pulpit.pulpit_name + '</td><td>' + pulpit.faculty + '</td><td>' + pulpit._count.Teacher + '</td>';
+                pulpitDiv.appendChild(tr)
+            })
+        }
+        
+        async function func() {
+            const PER_PAGE = 10
+            const pulpitCount = parseInt(await (await fetch('/api/pulpits/count')).text())
+            const buttonDiv = document.getElementById('buttonDiv')
+            const buttonCount = Math.ceil(pulpitCount / PER_PAGE)
+            for (let i = 0; i < buttonCount; i++) {
+                const button = document.createElement('button')
+                    button.innerHTML = i + 1
+                    button.id = `button${button.innerHTML}`
+                    button.onclick = btnOnClick
+                    buttonDiv.appendChild(button)
+            }
+            document.getElementById('button1').click()
+        }
+        func()
+    </script>
+</body>
+
+</html>
