@@ -11,7 +11,7 @@ const hbs = require('hbs')
 app.set("view engine", "hbs");
 hbs.registerPartials(__dirname + "/views/partial");
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.json())
+app.use(express.json())//--
 
 app.use("/", homeRouter);
 app.use("/user", userRouter);

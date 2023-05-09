@@ -1,0 +1,14 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Userr {
+  id       Int    @id(map: "PK__Userr__3213E83F61EE1ACE") @default(autoincrement())
+  username String @db.VarChar(255)
+  password String @db.VarChar(255)
+}
