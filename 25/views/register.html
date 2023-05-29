@@ -1,0 +1,30 @@
+<html>
+<head>
+  <title>регистрация</title>
+</head>
+<body>
+<div id="authorization">
+  <form name="auth" action="register" method="POST">
+    <label for="login">Login: </label>
+    <label>
+      <input id="login" type="text" name="username" placeholder="Login" required >
+    </label>
+
+    <p>
+      <label for="password">Password: </label>
+      <input id="password" type="password" name="password" placeholder="Password" >
+    </p>
+
+    <p>
+      <label for="email">Email: </label>
+      <input id="email" type="text" name="email" placeholder="Email" >
+    </p>
+
+    <input type="hidden" name="inputHide" />
+    <button type="button" name="sign" value="SIGN UP" onclick="{document.auth.inputHide.value=this.value;document.auth.submit();}">SIGN UP</button>
+
+  </form>
+  <a href = 'http://localhost:3000/login'>LOG IN</a>
+</div>
+</body>
+</html>

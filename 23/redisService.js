@@ -1,4 +1,4 @@
-const {ConnectToRedis}=require('./connectRedis')
+const {ConnectToRedis}=require('./ConnectToRedis')
 
 const AddTokenToBlackList = async (token) => {
     const client =  await ConnectToRedis();

@@ -45,7 +45,7 @@ app.get('/auth/login', (req, res) => {
     })
     .get('/resource', (req, res) => {
         if (req.isAuthenticated()) 
-            return res.end(`Resource owned by ${req.user.username}`);
+            return res.end(`Resource ${req.user.username}`);
         res.redirect('/auth/login');
     })
     .get('/logout', (req, res, next) => {
@@ -56,4 +56,4 @@ app.get('/auth/login', (req, res) => {
     })    
 
 app.use((req, res) => {res.status(404).send('Not found');});
-app.listen(3000, () => {console.log(`Server started at http://localhost:3000`);});
+app.listen(3000);
