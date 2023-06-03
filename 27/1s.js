@@ -22,7 +22,7 @@ app.post('/setKey',(req,res,next)=>
 	req.on('end',()=>{
 		const clientContext=JSON.parse(body);
 		if(clientContext.key_hex!=undefined){
-			serverSecret=serverDH.getSecret(clientContext);
+			serverSecret=serverDH.getSecret(clientContext);//вычисляем ключ шифр
 			res.writeHead(200,{'Content-Type': 'text/plain'});
 			var buf=new Buffer.alloc(32);
 			serverSecret.copy(buf,0,0,32);
@@ -40,15 +40,9 @@ app.post('/setKey',(req,res,next)=>
 
 app.get('/resource',(req,res,next)=>
 {
-	if(serverSecret!=undefined){
-		res.statusCode=200;
-		let rs2=fs.createReadStream('./encryption.txt');
-		rs2.pipe(res);
-		rs2.on('close',()=>{ res.end();});
-	}else{
-		res.statusCode=409;
-		console.log("error 409")
-		res.end('Set key');
-	}
+	res.statusCode=200;
+	let rs2=fs.createReadStream('./encryption.txt');
+	rs2.pipe(res);
+	rs2.on('close',()=>{ res.end();});
 });
 app.listen(8000);

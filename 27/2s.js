@@ -13,10 +13,15 @@ app.get('/', (req, res, next) => {
 
 app.get('/resource',(req,res,next)=>
 {
-	res.statusCode=200;
-	let rs2=fs.createReadStream('./file.txt');
-	rs2.pipe(res);
-	rs2.on('close',()=>{res.end();});
+    try{
+        let rs2=fs.createReadStream('./file.txt');
+        rs2.pipe(res);
+        rs2.on('close',()=>{res.end();});
+    }
+    catch(e){
+        console.log("error 409")
+		res.status(409).json({ error: "Something run wrong" });
+    }
 });
 
 app.listen(8000);

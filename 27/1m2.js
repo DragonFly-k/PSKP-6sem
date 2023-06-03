@@ -5,14 +5,14 @@ class ServerDH {
         const p = dh.getPrime();
         const gb = dh.getGenerator();
         const k = dh.generateKeys();
-        this.getContext = () => { // Метод getContext возвращает контекст сервера Diffie-Hellman
+        this.getContext = () => {
             return {
                 p_hex: p.toString('hex'),
                 g_hex: gb.toString('hex'),
                 key_hex: k.toString('hex')
             };
         };
-        this.getSecret = (clientContext) => {// Метод getSecret вычисляет общий секретный ключ на основе ключа клиента
+        this.getSecret = (clientContext) => {//общий секретный ключ
             const k = Buffer.from(clientContext.key_hex, 'hex');
             return dh.computeSecret(k);
         };

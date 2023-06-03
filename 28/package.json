@@ -1,0 +1,12 @@
+{
+  "type": "module",
+  "dependencies": {
+    "esm": "^3.2.25",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "multer": "^1.4.5-lts.1",
+    "path": "^0.12.7",
+    "webdav": "^5.0.0",
+    "webdav-server": "^2.6.2"
+  }
+}

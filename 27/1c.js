@@ -3,16 +3,16 @@ const {ClientDH} = require('./1m2');
 const fs=require('fs');
 const decipherFile = require('./1m').decipherFile;
 let parms;
-
 var clientDH;
+
 const req = http.request({ host: 'localhost',path: '/',port: 8000,method:'GET',headers:{'content-type':'application/json'}},(res)=> {
     let data = '';
     res.on('data',(chunk) =>{data+=chunk.toString('utf-8');});
     res.on('end',()=>{ 
 		let serverContext = JSON.parse(data);
-		clientDH= new ClientDH(serverContext);
+		clientDH = new ClientDH(serverContext);
 		let clientContext=clientDH.getContext();
-		parms=JSON.stringify(clientContext);
+		parms = JSON.stringify(clientContext);
 
 		const req2 = http.request({host: 'localhost',path: '/setKey',port: 8000,method:'POST'},(res)=> {
 			let data = '';

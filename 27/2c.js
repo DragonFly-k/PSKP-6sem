@@ -11,7 +11,7 @@ const req3 = http.request({host: 'localhost',path: '/resource',port: 8000, metho
         res.on('end',()=>{ 
             let signcontext = JSON.parse(data);
             var x = new ClientVerify(signcontext);
-            const rs = fs.createReadStream('./sign.txt');
+            const rs = fs.createReadStream('./test.txt');
             x.verify(rs, (result) => { console.log('result:', result); })
         });
     });
